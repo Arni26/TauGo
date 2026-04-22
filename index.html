@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TauGO — Қазақстанның тау маршруттары</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#F5F0E8;
+  --earth:#2C2418;
+  --sage:#4A6741;
+  --sage-light:#7A9E71;
+  --sand:#C9A96E;
+  --sky:#2A5F8F;
+  --danger:#B84040;
+  --warn:#C98A2A;
+  --good:#3D7A4E;
+  --radius:12px;
+  --font-display:'Unbounded',sans-serif;
+  --font-body:'Manrope',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--earth);font-family:var(--font-body);font-size:16px;line-height:1.6;overflow-x:hidden}
+
+/* ─── HEADER ─── */
+.header{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 2rem;height:64px;display:flex;align-items:center;background:rgba(245,240,232,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(44,36,24,0.08)}
+.header__inner{max-width:1200px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--earth)}
+.logo__mark{width:34px;height:34px;background:var(--earth);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.logo__mark svg{width:20px;height:20px;fill:var(--cream)}
+.logo__text{font-family:var(--font-display);font-size:16px;font-weight:900;letter-spacing:0.05em;color:var(--earth)}
+.logo__text span{color:var(--sage)}
+nav{display:flex;align-items:center;gap:2rem}
+nav a{font-size:13px;font-weight:500;color:var(--earth);text-decoration:none;opacity:0.7;transition:opacity 0.2s;letter-spacing:0.02em}
+nav a:hover{opacity:1}
+.nav__sos{background:var(--danger)!important;color:#fff!important;opacity:1!important;padding:6px 16px;border-radius:6px;font-weight:600!important}
+
+/* ─── HERO ─── */
+.hero{min-height:100vh;display:flex;align-items:flex-end;padding:0 2rem 8rem;position:relative;background:#1a1208;overflow:hidden}
+.hero__bg{position:absolute;inset:0;background:
+  radial-gradient(ellipse 80% 60% at 60% 30%, rgba(74,103,65,0.35) 0%, transparent 70%),
+  radial-gradient(ellipse 50% 80% at 80% 60%, rgba(42,95,143,0.2) 0%, transparent 60%),
+  linear-gradient(to bottom, #0d0b07 0%, #1a1208 40%, #2C2418 100%);
+}
+.hero__mountains{position:absolute;bottom:0;left:0;right:0;height:55%}
+.hero__content{position:relative;z-index:2;max-width:1200px;margin:0 auto;width:100%}
+.hero__eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(201,169,110,0.15);border:1px solid rgba(201,169,110,0.3);padding:6px 14px;border-radius:100px;margin-bottom:1.5rem}
+.hero__eyebrow-dot{width:6px;height:6px;background:var(--sand);border-radius:50%}
+.hero__eyebrow-text{font-size:12px;font-weight:500;color:var(--sand);letter-spacing:0.08em;text-transform:uppercase}
+.hero h1{font-family:var(--font-display);font-size:clamp(2.5rem, 6vw, 5.5rem);font-weight:900;color:#F5F0E8;line-height:1.0;margin-bottom:1.25rem;letter-spacing:-0.02em}
+.hero h1 em{color:var(--sage-light);font-style:normal}
+.hero__sub{font-size:1.1rem;color:rgba(245,240,232,0.6);max-width:500px;margin-bottom:2.5rem;font-weight:300;line-height:1.7}
+.hero__cta{display:flex;gap:1rem;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:var(--radius);font-family:var(--font-body);font-size:14px;font-weight:600;cursor:pointer;border:none;text-decoration:none;transition:transform 0.15s,opacity 0.15s;letter-spacing:0.02em}
+.btn:active{transform:scale(0.97)}
+.btn--primary{background:var(--sage);color:#fff}
+.btn--primary:hover{opacity:0.9}
+.btn--ghost{background:transparent;color:var(--cream);border:1px solid rgba(245,240,232,0.25)}
+.btn--ghost:hover{background:rgba(245,240,232,0.08)}
+.btn--outline{background:transparent;color:var(--earth);border:1.5px solid rgba(44,36,24,0.2);font-size:13px;padding:9px 18px}
+.btn--outline:hover{border-color:var(--earth);background:rgba(44,36,24,0.04)}
+.btn--sm{font-size:12px;padding:7px 14px;border-radius:8px;background:var(--sage);color:#fff;border:none;cursor:pointer}
+.btn--sm:hover{opacity:0.88}
+.btn--sos{background:var(--danger);color:#fff;font-size:15px;font-weight:700;padding:14px 32px;border-radius:var(--radius);width:100%;justify-content:center;letter-spacing:0.04em;border:none;cursor:pointer}
+.btn--sos:hover{opacity:0.92}
+.btn--call{padding:9px 18px;border-radius:8px;background:var(--danger);color:#fff;font-size:14px;font-weight:600;text-decoration:none;white-space:nowrap}
+.btn--share{padding:9px 18px;border-radius:8px;background:var(--warn);color:#fff;font-size:14px;font-weight:600;border:none;cursor:pointer;white-space:nowrap}
+.hero__scroll{margin-top:1rem;display:flex;align-items:center;gap:10px;color:rgba(245,240,232,0.35);font-size:12px;letter-spacing:0.06em}
+.hero__scroll-line{width:40px;height:1px;background:rgba(245,240,232,0.25)}
+
+/* ─── SECTIONS ─── */
+.section{padding:6rem 2rem}
+.container{max-width:1200px;margin:0 auto}
+.section__label{font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--sage);margin-bottom:0.75rem}
+.section__title{font-family:var(--font-display);font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:900;color:var(--earth);line-height:1.1;margin-bottom:0.75rem;letter-spacing:-0.02em}
+.section__title--light{color:#F5F0E8}
+.section__sub{font-size:1rem;color:rgba(44,36,24,0.55);max-width:500px;font-weight:400}
+.section__sub--light{color:rgba(245,240,232,0.55)}
+.section__head{margin-bottom:3rem}
+
+/* ─── FILTERS ─── */
+.filters{display:flex;gap:0.5rem;margin:2rem 0 2rem;flex-wrap:wrap}
+.filter{padding:8px 18px;border-radius:100px;border:1.5px solid rgba(44,36,24,0.18);background:transparent;font-family:var(--font-body);font-size:13px;font-weight:500;color:rgba(44,36,24,0.6);cursor:pointer;transition:all 0.2s}
+.filter:hover{border-color:var(--sage);color:var(--sage)}
+.filter.active{background:var(--earth);color:var(--cream);border-color:var(--earth)}
+
+/* ─── ROUTE CARDS ─── */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem}
+.card{background:#fff;border-radius:16px;overflow:hidden;border:1px solid rgba(44,36,24,0.08);transition:transform 0.2s,box-shadow 0.2s}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(44,36,24,0.1)}
+.card__img{height:200px;background-size:cover;background-position:center;position:relative}
+.card__img--1{background-image:url("https://shymbulak.storage.yandexcloud.kz/media-test/7af5f821b27d0346435054756bf1f10a.jpg")}
+.card__img--2{background-image:url("https://i.wfolio.ru/x/TBaBuvaAKB8gBqVWz-Y524f1f4PSy8Ou/MHE6dXXd0MN5QuRF3fukm1pAZfT34e5u/bRJjkcgb2Ae2BZvZgYj5lz5NGHYyD6ny/C5weVapy1spQU8TUiGr6NIFeOEej2qre/H8EAv1jYPXVN_9rFufUs70rUj61itE1x/v64f552BqZ0.jpg")}
+.card__img--3{background-image:url("https://gorny-club.kz/wp-content/uploads/2020/04/0_1_DSC01125-Talgar-min.jpg")}
+.card__img--4{background-image:url("https://cdn.explorekazakhstan.net/images/tours/2/1500x840_1.webp")}
+.card__img--5{background-image:url("https://otkryvai.kz/wp-content/uploads/2022/03/IMG_20211203_020352_412-optimized.jpg")}
+.card__img--6{background-image:url("https://el.kz/upload/storage_el/0d/0d99656a524768027134216a05670493.jpg")}
+.card__img-label{position:absolute;bottom:12px;left:12px;right:12px}
+.card__body{padding:1.25rem}
+.card__top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:0.75rem}
+.card__top h3{font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--earth);line-height:1.3}
+.badge{font-size:10px;font-weight:700;padding:4px 10px;border-radius:100px;white-space:nowrap;letter-spacing:0.04em;flex-shrink:0}
+.badge--easy{background:#e6f3e8;color:#2d6b38}
+.badge--medium{background:#fef4e0;color:#8a5a0a}
+.badge--hard{background:#fceaea;color:#8a2828}
+.card__meta{display:flex;gap:0.75rem;flex-wrap:wrap;font-size:12px;color:rgba(44,36,24,0.55);margin-bottom:0.75rem}
+.diff-bar{height:3px;background:rgba(44,36,24,0.08);border-radius:2px;margin-bottom:1rem;overflow:hidden}
+.diff-bar__fill{height:100%;border-radius:2px;background:var(--sage);transition:width 0.4s}
+.card[data-difficulty="hard"] .diff-bar__fill{background:var(--danger)}
+.card[data-difficulty="medium"] .diff-bar__fill{background:var(--warn)}
+.card__desc{font-size:13px;color:rgba(44,36,24,0.6);line-height:1.6;margin-bottom:1rem}
+.card__scene{height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:1rem;position:relative}
+.scene-icon{font-size:2.5rem;opacity:0.4;margin-bottom:0.5rem}
+.scene-title{font-family:var(--font-display);font-size:13px;font-weight:700;color:rgba(255,255,255,0.9);letter-spacing:0.04em}
+
+/* ─── WEATHER ─── */
+.section--dark{background:var(--earth)}
+.weather-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem}
+.weather-card{background:rgba(245,240,232,0.06);border:1px solid rgba(245,240,232,0.1);border-radius:14px;padding:1.5rem;transition:background 0.2s}
+.weather-card:hover{background:rgba(245,240,232,0.09)}
+.weather-card__loc{font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:rgba(245,240,232,0.45);margin-bottom:1rem}
+.weather-card__row{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem}
+.weather-card__icon{font-size:2rem}
+.weather-card__temp{font-family:var(--font-display);font-size:2rem;font-weight:900;color:#F5F0E8}
+.weather-card__desc{font-size:13px;color:rgba(245,240,232,0.5);margin-bottom:1rem;font-weight:300}
+.weather-card__details{display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:1rem}
+.weather-card__details span{font-size:12px;color:rgba(245,240,232,0.45)}
+.weather-card__status{font-size:12px;font-weight:600;padding:5px 12px;border-radius:100px;display:inline-block;letter-spacing:0.04em}
+.status--good{background:rgba(61,122,78,0.25);color:#7ACA8A}
+.status--ok{background:rgba(201,138,42,0.25);color:#E0A840}
+.status--bad{background:rgba(184,64,64,0.25);color:#E07A7A}
+
+/* ─── DIFFICULTY LEGEND ─── */
+.diff-legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;margin-top:2rem}
+.diff-item{padding:2rem;border-radius:14px;border:1.5px solid rgba(44,36,24,0.1)}
+.diff-item--easy{border-color:rgba(74,103,65,0.25);background:rgba(74,103,65,0.04)}
+.diff-item--medium{border-color:rgba(201,138,42,0.25);background:rgba(201,138,42,0.04)}
+.diff-item--hard{border-color:rgba(184,64,64,0.25);background:rgba(184,64,64,0.04)}
+.diff-item__icon{font-size:1.5rem;margin-bottom:0.75rem}
+.diff-item h4{font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--earth);margin-bottom:1rem;letter-spacing:0.02em}
+.diff-item ul{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+.diff-item ul li{font-size:13px;color:rgba(44,36,24,0.6);padding-left:1rem;position:relative}
+.diff-item ul li::before{content:'—';position:absolute;left:0;opacity:0.4}
+
+/* ─── COMPANIONS ─── */
+.companions-layout{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start}
+@media(max-width:768px){.companions-layout{grid-template-columns:1fr}}
+.companions-list{display:flex;flex-direction:column;gap:1rem}
+.companion{background:rgba(245,240,232,0.06);border:1px solid rgba(245,240,232,0.1);border-radius:12px;padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem}
+.companion__avatar{width:42px;height:42px;border-radius:50%;background:rgba(245,240,232,0.12);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.companion__info{flex:1;min-width:0}
+.companion__name{font-size:14px;font-weight:600;color:#F5F0E8;margin-bottom:2px}
+.companion__route{font-size:12px;color:rgba(245,240,232,0.45);margin-bottom:6px}
+.companion__tags{display:flex;gap:5px;flex-wrap:wrap}
+.tag{font-size:10px;font-weight:600;padding:3px 8px;border-radius:100px;background:rgba(245,240,232,0.1);color:rgba(245,240,232,0.55);letter-spacing:0.03em}
+.companions-form{background:rgba(245,240,232,0.06);border:1px solid rgba(245,240,232,0.12);border-radius:14px;padding:1.75rem}
+.companions-form h3{font-family:var(--font-display);font-size:16px;font-weight:700;color:#F5F0E8;margin-bottom:1.5rem}
+.form-group{margin-bottom:1rem}
+.form-group label{display:block;font-size:12px;font-weight:600;color:rgba(245,240,232,0.5);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:rgba(245,240,232,0.06);border:1px solid rgba(245,240,232,0.12);border-radius:8px;padding:10px 12px;font-family:var(--font-body);font-size:14px;color:#F5F0E8;outline:none;transition:border-color 0.2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:rgba(245,240,232,0.35)}
+.form-group textarea{resize:vertical;min-height:80px}
+.form-group select option{background:#2C2418;color:#F5F0E8}
+.btn--full{width:100%;justify-content:center;margin-top:0.5rem}
+
+/* ─── SOS ─── */
+.sos-section{background:var(--cream)}
+.sos-grid{display:grid;grid-template-columns:1fr 2fr;gap:2rem;margin-bottom:3rem;align-items:start}
+@media(max-width:768px){.sos-grid{grid-template-columns:1fr}}
+.sos-main{background:var(--earth);border-radius:16px;padding:2rem;text-align:center}
+.sos-main__icon{font-size:3rem;margin-bottom:1rem}
+.sos-main h3{font-family:var(--font-display);font-size:18px;font-weight:700;color:#F5F0E8;margin-bottom:0.75rem}
+.sos-main p{font-size:13px;color:rgba(245,240,232,0.5);margin-bottom:1.5rem;line-height:1.6}
+.sos-main__note{font-size:11px;color:rgba(245,240,232,0.3);margin-top:0.75rem;letter-spacing:0.03em}
+.sos-actions{display:flex;flex-direction:column;gap:0.75rem}
+.sos-action{background:#fff;border:1px solid rgba(44,36,24,0.08);border-radius:12px;padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem}
+.sos-action__icon{font-size:1.25rem;flex-shrink:0}
+.sos-action__info{flex:1}
+.sos-action__info h4{font-size:14px;font-weight:600;color:var(--earth);margin-bottom:2px}
+.sos-action__info p{font-size:12px;color:rgba(44,36,24,0.5)}
+.sos-tips{background:#fff;border:1px solid rgba(44,36,24,0.08);border-radius:14px;padding:1.75rem}
+.sos-tips h4{font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--earth);margin-bottom:1.25rem;letter-spacing:0.02em}
+.tips-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.75rem}
+.tip{display:flex;align-items:flex-start;gap:12px;padding:0.875rem;background:rgba(44,36,24,0.03);border-radius:8px}
+.tip__num{width:24px;height:24px;border-radius:50%;background:var(--earth);color:var(--cream);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tip span:last-child{font-size:13px;color:rgba(44,36,24,0.6);line-height:1.5}
+
+/* ─── FOOTER ─── */
+.footer{background:var(--earth);padding:3rem 2rem;text-align:center}
+.footer__inner{max-width:1200px;margin:0 auto}
+.footer .logo{justify-content:center;margin-bottom:0.75rem}
+.footer .logo__mark{background:rgba(245,240,232,0.12)}
+.footer .logo__text{color:#F5F0E8}
+.footer p{font-size:13px;color:rgba(245,240,232,0.4);margin-bottom:1.5rem}
+.footer__links{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap}
+.footer__links a{font-size:13px;color:rgba(245,240,232,0.35);text-decoration:none;transition:color 0.2s}
+.footer__links a:hover{color:rgba(245,240,232,0.7)}
+
+/* ─── MODAL ─── */
+.modal{display:none;position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;background:rgba(28,22,10,0.7);backdrop-filter:blur(8px)}
+.modal.open{display:flex}
+.modal__box{background:var(--cream);border-radius:20px;padding:2.5rem;max-width:380px;width:90%;text-align:center}
+.modal__icon{font-size:3rem;margin-bottom:1rem}
+.modal__box h3{font-family:var(--font-display);font-size:18px;font-weight:900;color:var(--earth);margin-bottom:0.75rem}
+.modal__box p{font-size:14px;color:rgba(44,36,24,0.6);line-height:1.6;margin-bottom:1rem}
+.modal__coords{font-size:12px;font-family:monospace;background:rgba(44,36,24,0.06);padding:8px 12px;border-radius:8px;color:var(--sage);margin-bottom:1.5rem;min-height:32px}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.hero__eyebrow{animation:fadeUp 0.6s ease both}
+.hero h1{animation:fadeUp 0.7s 0.1s ease both}
+.hero__sub{animation:fadeUp 0.7s 0.2s ease both}
+.hero__cta{animation:fadeUp 0.7s 0.3s ease both}
+.card.hidden{display:none}
+
+@media(max-width:600px){
+  nav a:not(.nav__sos){display:none}
+  .cards{grid-template-columns:1fr}
+  .hero{padding-bottom:5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header__inner">
+    <a href="#" class="logo">
+      <div class="logo__mark">
+        <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 17 L6 7 L10 12 L14 5 L19 17Z"/>
+        </svg>
+      </div>
+      <span class="logo__text">Tau<span>GO</span></span>
+    </a>
+    <nav>
+      <a href="#routes">Маршруттар</a>
+      <a href="#weather">Ауа райы</a>
+      <a href="#companions">Серіктер</a>
+      <a href="#sos" class="nav__sos">SOS</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero__bg"></div>
+  <svg class="hero__mountains" viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="m1" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#4A6741" stop-opacity="0.6"/>
+        <stop offset="100%" stop-color="#2C2418" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="m2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#2a3d28" stop-opacity="0.8"/>
+        <stop offset="100%" stop-color="#1a1208" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="m3" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#1a2818" stop-opacity="0.95"/>
+        <stop offset="100%" stop-color="#1a1208" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <polygon points="0,400 200,150 380,280 560,80 720,220 900,40 1100,200 1300,100 1440,180 1440,400" fill="url(#m1)"/>
+    <polygon points="0,400 150,220 320,300 500,160 680,260 850,100 1020,240 1200,150 1440,220 1440,400" fill="url(#m2)"/>
+    <polygon points="0,400 100,280 250,340 400,240 600,320 750,200 900,300 1100,220 1300,280 1440,240 1440,400" fill="url(#m3)"/>
+  </svg>
+  <div class="hero__content">
+    <div class="hero__eyebrow">
+      <div class="hero__eyebrow-dot"></div>
+      <span class="hero__eyebrow-text">Қазақстанның тау маршруттары</span>
+    </div>
+    <h1>Таулар<br><em>шақырады</em></h1>
+    <p class="hero__sub">Маршруттарды табыңыз, ауа райын тексеріңіз және сенімді серіктерді іздеңіз</p>
+    <div class="hero__cta">
+      <a href="#routes" class="btn btn--primary">Маршрут іздеу</a>
+      <a href="#companions" class="btn btn--ghost">Серік табу</a>
+    </div>
+    <div class="hero__scroll" style="margin-top:3rem">
+      <div class="hero__scroll-line"></div>
+      <span>Төмен қараңыз</span>
+    </div>
+  </div>
+</section>
+
+<!-- ROUTES -->
+<section class="section" id="routes">
+  <div class="container">
+    <div class="section__head">
+      <p class="section__label">Маршруттар</p>
+      <h2 class="section__title">Танымал трек<br>жолдары</h2>
+      <p class="section__sub">Барлық деңгей үшін таңдалған маршруттар</p>
+    </div>
+
+    <div class="filters">
+      <button class="filter active" data-filter="all">Барлығы</button>
+      <button class="filter" data-filter="easy">Жеңіл</button>
+      <button class="filter" data-filter="medium">Орташа</button>
+      <button class="filter" data-filter="hard">Қиын</button>
+    </div>
+
+    <div class="cards">
+
+      <div class="card" data-difficulty="easy">
+        <div class="card__img card__img--1">
+          <div class="card__scene">
+            <div class="scene-icon">🌲</div>
+            <div class="scene-title">Медео — Шымбулақ</div>
+          </div>
+        </div>
+        <div class="card__body">
+          <div class="card__top">
+            <h3>Медео — Шымбулақ</h3>
+            <span class="badge badge--easy">Жеңіл</span>
+          </div>
+          <div class="card__meta">
+            <span>📍 Алматы</span>
+            <span>📏 8 км</span>
+            <span>⏱ 3–4 сағат</span>
+          </div>
+          <div class="diff-bar"><div class="diff-bar__fill" style="width:25%"></div></div>
+          <p class="card__desc">Медео катогы мен Шымбулақ курортына қарайтын тау өзені бойымен жүретін классикалық маршрут.</p>
+          <button class="btn btn--outline">Толығырақ</button>
+        </div>
+      </div>
+
+      <div class="card" data-difficulty="medium">
+        <div class="card__img card__img--2">
+          <div class="card__scene">
+            <div class="scene-icon">🏔</div>
+            <div class="scene-title">Көлсай көлдері</div>
+          </div>
+        </div>
+        <div class="card__body">
+          <div class="card__top">
+            <h3>Көлсай көлі</h3>
+            <span class="badge badge--medium">Орташа</span>
+          </div>
+          <div class="card__meta">
+            <span>📍 Алматы облысы</span>
+            <span>📏 14 км</span>
+            <span>⏱ 6–7 сағат</span>
+          </div>
+          <div class="diff-bar"><div class="diff-bar__fill" style="width:55%"></div></div>
+          <p class="card__desc">Тянь-Шань шыршалары арасындағы үш тамаша тау көлі. Биіктік айырмасы — 700 м.</p>
+          <button class="btn btn--outline">Толығырақ</button>
+        </div>
+      </div>
+
+      <div class="card" data-difficulty="hard">
+        <div class="card__img card__img--3">
+          <div class="card__scene">
+            <div class="scene-icon">⛰</div>
+            <div class="scene-title">Талғар шыңы</div>
+          </div>
+        </div>
+        <div class="card__body">
+          <div class="card__top">
+            <h3>Талғар шыңы</h3>
+            <span class="badge badge--hard">Қиын</span>
+          </div>
+          <div class="card__meta">
+            <span>📍 Іле Алатауы</span>
+            <span>📏 42 км</span>
+            <span>⏱ 4–5 күн</span>
+          </div>
+          <div class="diff-bar"><div class="diff-bar__fill" style="width:90%"></div></div>
+          <p class="card__desc">Іле Алатауының ең биік нүктесі — 4973 м. Альпинистік дайындық талап етіледі.</p>
+          <button class="btn btn--outline">Толығырақ</button>
+        </div>
+      </div>
+
+      <div class="card" data-difficulty="medium">
+        <div class="card__img card__img--4">
+          <div class="card__scene">
+            <div class="scene-icon">🏜</div>
+            <div class="scene-title">Шарын каньоны</div>
+          </div>
+        </div>
+        <div class="card__body">
+          <div class="card__top">
+            <h3>Шарын каньоны</h3>
+            <span class="badge badge--medium">Орташа</span>
+          </div>
+          <div class="card__meta">
+            <span>📍 Алматы облысы</span>
+            <span>📏 10 км</span>
+            <span>⏱ 4–5 сағат</span>
+          </div>
+          <div class="diff-bar"><div class="diff-bar__fill" style="width:45%"></div></div>
+          <p class="card__desc">«Сарайлар алқабы» — Шарын өзені бойындағы қызыл жартас формациялары. Гранд-Каньонға ұқсас.</p>
+          <button class="btn btn--outline">Толығырақ</button>
+        </div>
+      </div>
+
+      <div class="card" data-difficulty="easy">
+        <div class="card__img card__img--5">
+          <div class="card__scene">
+            <div class="scene-icon">💧</div>
+            <div class="scene-title">Үлкен Алматы көлі</div>
+          </div>
+        </div>
+        <div class="card__body">
+          <div class="card__top">
+            <h3>Үлкен Алматы көлі</h3>
+            <span class="badge badge--easy">Жеңіл</span>
+          </div>
+          <div class="card__meta">
+            <span>📍 Алматы</span>
+            <span>📏 6 км</span>
+            <span>⏱ 2–3 сағат</span>
+          </div>
+          <div class="diff-bar"><div class="diff-bar__fill" style="width:20%"></div></div>
+          <p class="card__desc">2500 м биіктіктегі жасыл-күгілдір тау көлі. Жаңадан бастаушылар үшін тамаша маршрут.</p>
+          <button class="btn btn--outline">Толығырақ</button>
+        </div>
+      </div>
+
+      <div class="card" data-difficulty="hard">
+        <div class="card__img card__img--6">
+          <div class="card__scene">
+            <div class="scene-icon">🌌</div>
+            <div class="scene-title">Хан Тәңірі</div>
+          </div>
+        </div>
+        <div class="card__body">
+          <div class="card__top">
+            <h3>Хан Тәңірі</h3>
+            <span class="badge badge--hard">Қиын</span>
+          </div>
+          <div class="card__meta">
+            <span>📍 Тянь-Шань</span>
+            <span>📏 60+ км</span>
+            <span>⏱ 20–25 күн</span>
+          </div>
+          <div class="diff-bar"><div class="diff-bar__fill" style="width:100%"></div></div>
+          <p class="card__desc">Биіктігі 7010 м. «Аспан ханы» — Орталық Азияның ең сұлу шыңдарының бірі.</p>
+          <button class="btn btn--outline">Толығырақ</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WEATHER -->
+<section class="section section--dark" id="weather">
+  <div class="container">
+    <div class="section__head">
+      <p class="section__label" style="color:rgba(201,169,110,0.7)">Ауа райы</p>
+      <h2 class="section__title section__title--light">Маршруттардағы<br>жағдай</h2>
+      <p class="section__sub section__sub--light">Негізгі орындардағы өзекті ауа райы</p>
+    </div>
+
+    <div class="weather-grid">
+      <div class="weather-card">
+        <div class="weather-card__loc">Алматы / Медео</div>
+        <div class="weather-card__row">
+          <div class="weather-card__icon">☀️</div>
+          <div class="weather-card__temp">+18°</div>
+        </div>
+        <div class="weather-card__desc">Ашық</div>
+        <div class="weather-card__details">
+          <span>💧 45%</span>
+          <span>💨 12 км/сағ</span>
+          <span>👁 10 км</span>
+        </div>
+        <span class="weather-card__status status--good">Тамаша жағдай</span>
+      </div>
+
+      <div class="weather-card">
+        <div class="weather-card__loc">Көлсай / Күнгей</div>
+        <div class="weather-card__row">
+          <div class="weather-card__icon">⛅</div>
+          <div class="weather-card__temp">+10°</div>
+        </div>
+        <div class="weather-card__desc">Айнымалы бұлт</div>
+        <div class="weather-card__details">
+          <span>💧 62%</span>
+          <span>💨 20 км/сағ</span>
+          <span>👁 7 км</span>
+        </div>
+        <span class="weather-card__status status--ok">Қабылдарлық жағдай</span>
+      </div>
+
+      <div class="weather-card">
+        <div class="weather-card__loc">Хан Тәңірі / База</div>
+        <div class="weather-card__row">
+          <div class="weather-card__icon">🌨</div>
+          <div class="weather-card__temp">−4°</div>
+        </div>
+        <div class="weather-card__desc">Қар жауу</div>
+        <div class="weather-card__details">
+          <span>💧 88%</span>
+          <span>💨 45 км/сағ</span>
+          <span>👁 2 км</span>
+        </div>
+        <span class="weather-card__status status--bad">Нашар жағдай</span>
+      </div>
+
+      <div class="weather-card">
+        <div class="weather-card__loc">Шарын каньоны</div>
+        <div class="weather-card__row">
+          <div class="weather-card__icon">🌤</div>
+          <div class="weather-card__temp">+24°</div>
+        </div>
+        <div class="weather-card__desc">Негізінен ашық</div>
+        <div class="weather-card__details">
+          <span>💧 30%</span>
+          <span>💨 8 км/сағ</span>
+          <span>👁 15 км</span>
+        </div>
+        <span class="weather-card__status status--good">Тамаша жағдай</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIFFICULTY -->
+<section class="section" id="difficulty">
+  <div class="container">
+    <div class="section__head">
+      <p class="section__label">Анықтама</p>
+      <h2 class="section__title">Қиындық<br>деңгейлері</h2>
+    </div>
+    <div class="diff-legend">
+      <div class="diff-item diff-item--easy">
+        <div class="diff-item__icon">🟢</div>
+        <h4>Жеңіл</h4>
+        <ul>
+          <li>Күніне 10 км-ге дейін</li>
+          <li>Биіктік 400 м-ге дейін</li>
+          <li>Арнайы дайындық қажет емес</li>
+          <li>Отбасылар мен жаңадан бастаушылар үшін</li>
+        </ul>
+      </div>
+      <div class="diff-item diff-item--medium">
+        <div class="diff-item__icon">🟡</div>
+        <h4>Орташа</h4>
+        <ul>
+          <li>Күніне 10–20 км</li>
+          <li>Биіктік 400–1000 м</li>
+          <li>Дене дайындығы талап етіледі</li>
+          <li>Жаяу жүру тәжірибесі ұсынылады</li>
+        </ul>
+      </div>
+      <div class="diff-item diff-item--hard">
+        <div class="diff-item__icon">🔴</div>
+        <h4>Қиын</h4>
+        <ul>
+          <li>Күніне 20+ км</li>
+          <li>Биіктік 1000+ м</li>
+          <li>Альпинистік дайындық</li>
+          <li>Арнайы жабдық қажет</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPANIONS -->
+<section class="section section--dark" id="companions">
+  <div class="container">
+    <div class="section__head">
+      <p class="section__label" style="color:rgba(201,169,110,0.7)">Серіктер</p>
+      <h2 class="section__title section__title--light">Жолдас табу</h2>
+      <p class="section__sub section__sub--light">Келесі жорыққа команда тап</p>
+    </div>
+
+    <div class="companions-layout">
+      <div class="companions-list">
+
+        <div class="companion">
+          <div class="companion__avatar">👤</div>
+          <div class="companion__info">
+            <div class="companion__name">Айдар Қ.</div>
+            <div class="companion__route">📍 Көлсай • 20 мамыр</div>
+            <div class="companion__tags">
+              <span class="tag">Орташа</span>
+              <span class="tag">3 адам</span>
+              <span class="tag">Шатыр</span>
+            </div>
+          </div>
+          <button class="btn btn--sm">Қосылу</button>
+        </div>
+
+        <div class="companion">
+          <div class="companion__avatar">👤</div>
+          <div class="companion__info">
+            <div class="companion__name">Зарина М.</div>
+            <div class="companion__route">📍 ҮАК • 18 мамыр</div>
+            <div class="companion__tags">
+              <span class="tag">Жеңіл</span>
+              <span class="tag">2 адам</span>
+              <span class="tag">Бір күн</span>
+            </div>
+          </div>
+          <button class="btn btn--sm">Қосылу</button>
+        </div>
+
+        <div class="companion">
+          <div class="companion__avatar">👤</div>
+          <div class="companion__info">
+            <div class="companion__name">Руслан Т.</div>
+            <div class="companion__route">📍 Шарын • 25 мамыр</div>
+            <div class="companion__tags">
+              <span class="tag">Орташа</span>
+              <span class="tag">5 адам</span>
+              <span class="tag">Көлік</span>
+            </div>
+          </div>
+          <button class="btn btn--sm">Қосылу</button>
+        </div>
+
+        <div class="companion">
+          <div class="companion__avatar">👤</div>
+          <div class="companion__info">
+            <div class="companion__name">Гүлім А.</div>
+            <div class="companion__route">📍 Медео • 17 мамыр</div>
+            <div class="companion__tags">
+              <span class="tag">Жеңіл</span>
+              <span class="tag">1 адам</span>
+              <span class="tag">Таңертең</span>
+            </div>
+          </div>
+          <button class="btn btn--sm">Қосылу</button>
+        </div>
+
+      </div>
+
+      <div class="companions-form">
+        <h3>Топ құру</h3>
+        <div class="form-group">
+          <label>Маршрут</label>
+          <select>
+            <option>Медео — Шымбулақ</option>
+            <option>Көлсай көлі</option>
+            <option>Шарын каньоны</option>
+            <option>Үлкен Алматы көлі</option>
+            <option>Талғар шыңы</option>
+            <option>Хан Тәңірі</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Күні</label>
+          <input type="date"/>
+        </div>
+        <div class="form-group">
+          <label>Топтағы орын саны</label>
+          <input type="number" min="1" max="20" placeholder="Мысалы: 4"/>
+        </div>
+        <div class="form-group">
+          <label>Қиындық деңгейі</label>
+          <select>
+            <option>Жеңіл</option>
+            <option>Орташа</option>
+            <option>Қиын</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Сипаттама</label>
+          <textarea placeholder="Маршрут пен талаптарыңыз туралы айтыңыз..."></textarea>
+        </div>
+        <button class="btn btn--primary btn--full">Топты жариялау</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOS -->
+<section class="section sos-section" id="sos">
+  <div class="container">
+    <div class="section__head">
+      <p class="section__label" style="color:var(--danger)">Қауіпсіздік</p>
+      <h2 class="section__title">Төтенше жәрдем</h2>
+      <p class="section__sub">Қауіп төнгенде — осы құралдарды бірден пайдаланыңыз</p>
+    </div>
+
+    <div class="sos-grid">
+      <div class="sos-main">
+        <div class="sos-main__icon">🆘</div>
+        <h3>SOS сигналы</h3>
+        <p>Координаттарыңызды құтқару қызметіне жіберіңіз</p>
+        <button class="btn btn--sos" onclick="triggerSOS()">SOS — СИГНАЛ ЖІБЕРУ</button>
+        <div class="sos-main__note">Тек нақты қауіп төнгенде пайдаланыңыз</div>
+      </div>
+
+      <div class="sos-actions">
+        <div class="sos-action">
+          <div class="sos-action__icon">📞</div>
+          <div class="sos-action__info">
+            <h4>Тау құтқару қызметі</h4>
+            <p>Тәулік бойы, бүкіл Қазақстан бойынша</p>
+          </div>
+          <a href="tel:101" class="btn btn--call">101</a>
+        </div>
+        <div class="sos-action">
+          <div class="sos-action__icon">🏥</div>
+          <div class="sos-action__info">
+            <h4>Жедел медициналық жәрдем</h4>
+            <p>Таулардан медициналық эвакуация</p>
+          </div>
+          <a href="tel:103" class="btn btn--call">103</a>
+        </div>
+        <div class="sos-action">
+          <div class="sos-action__icon">🚔</div>
+          <div class="sos-action__info">
+            <h4>Полиция / ТЖМ</h4>
+            <p>Іздестіру операцияларын үйлестіру</p>
+          </div>
+          <a href="tel:112" class="btn btn--call">112</a>
+        </div>
+        <div class="sos-action">
+          <div class="sos-action__icon">📡</div>
+          <div class="sos-action__info">
+            <h4>Координаттарды жіберу</h4>
+            <p>GPS нүктесін контактіге жіберу</p>
+          </div>
+          <button class="btn btn--share" onclick="shareLocation()">Жіберу</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sos-tips">
+      <h4>Төтенше жағдайда не істеу керек:</h4>
+      <div class="tips-grid">
+        <div class="tip">
+          <div class="tip__num">1</div>
+          <span>Орнында қалыңыз — алысқа кетпеңіз</span>
+        </div>
+        <div class="tip">
+          <div class="tip__num">2</div>
+          <span>Дыбыстық және визуалды сигнал беріңіз</span>
+        </div>
+        <div class="tip">
+          <div class="tip__num">3</div>
+          <span>Соңғы белгілі орналасқан жеріңізді хабарлаңыз</span>
+        </div>
+        <div class="tip">
+          <div class="tip__num">4</div>
+          <span>Жылынып, телефон зарядын үнемдеңіз</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="logo" style="display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:0.75rem;text-decoration:none">
+      <div class="logo__mark">
+        <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 17 L6 7 L10 12 L14 5 L19 17Z" fill="#F5F0E8"/>
+        </svg>
+      </div>
+      <span class="logo__text" style="color:#F5F0E8;font-family:'Unbounded',sans-serif;font-size:16px;font-weight:900;letter-spacing:0.05em">Tau<span style="color:#7A9E71">GO</span></span>
+    </div>
+    <p>Қауіпсіз жолдар мен ашық аспан тілейміз!</p>
+    <p>Арнұр , Ернұр , Асылжан, Әділет , Марғұлан, Дінмұхаммед</p>
+    <div class="footer__links">
+      <a href="#">Жоба туралы</a>
+      <a href="#">Қауіпсіздік ережелері</a>
+      <a href="#">Байланыс</a>
+    </div>
+  </div>
+</footer>
+
+<!-- SOS MODAL -->
+<div class="modal" id="sosModal">
+  <div class="modal__box">
+    <div class="modal__icon">🆘</div>
+    <h3>SOS сигналы жіберілді!</h3>
+    <p>Координаттарыңыз құтқару қызметіне берілді.<br>Орнында қалыңыз. Көмек жолда.</p>
+    <div class="modal__coords" id="modalCoords">Координаттар анықталуда...</div>
+    <button class="btn btn--primary" onclick="closeModal()">Жабу</button>
+  </div>
+</div>
+
+<script>
+// Filter
+document.querySelectorAll('.filter').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f=btn.dataset.filter;
+    document.querySelectorAll('.card').forEach(card=>{
+      if(f==='all'||card.dataset.difficulty===f){card.classList.remove('hidden')}
+      else{card.classList.add('hidden')}
+    });
+  });
+});
+
+// SOS
+function triggerSOS(){
+  document.getElementById('sosModal').classList.add('open');
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      document.getElementById('modalCoords').textContent=
+        `${pos.coords.latitude.toFixed(5)}° Е, ${pos.coords.longitude.toFixed(5)}° С`;
+    },()=>{
+      document.getElementById('modalCoords').textContent='Координаттар қолжетімді емес';
+    });
+  }else{
+    document.getElementById('modalCoords').textContent='Геолокация қолдауы жоқ';
+  }
+}
+function closeModal(){document.getElementById('sosModal').classList.remove('open')}
+function shareLocation(){
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      const url=`https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
+      if(navigator.share){navigator.share({title:'Менің орналасқан жерім',url})}
+      else{navigator.clipboard.writeText(url).then(()=>alert('Сілтеме көшірілді!'))}
+    },()=>alert('Геолокацияны алу мүмкін болмады'));
+  }
+}
+document.getElementById('sosModal').addEventListener('click',function(e){
+  if(e.target===this)closeModal();
+});
+</script>
+</body>
+</html>
